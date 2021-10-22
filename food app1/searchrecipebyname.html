@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>search Receipe By name</title>
+    <link rel="stylesheet" href="./styles/style.css">
+</head>
+<body>
+
+
+
+  <div id="navbar"></div>
+  
+
+      
+  <input oninput="debounce(main,1000)" type="text" placeholder="Search Receipe" id="enterfood">
+    
+ 
+     
+    <div id="foodshow"></div>
+    <div id="receipedetails"></div>
+ 
+       <div id="foodcontainer"></div>
+
+  <script type="module">
+     import navbar from "./components/navbar.js";
+      document.getElementById("navbar").innerHTML=navbar();
+     </script>
+
+ 
+
+    
+</body>
+</html>
+
+
+<script>
+
+/// food slideshow
+
+// let images=["https://images.pexels.com/photos/2474661/pexels-photo-2474661.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+//              "https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+//             "https://images.pexels.com/photos/2983101/pexels-photo-2983101.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+//              "https://images.pexels.com/photos/1624487/pexels-photo-1624487.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+//               "https://images.pexels.com/photos/1860196/pexels-photo-1860196.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"]
+
+//      var count=1;
+//      function slideshow()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// let q= document.getElementById("enterfood").value;
+ 
+var timerId;
+
+   async function searchrecepie(q){
+   // let q= document.getElementById("enterfood").value;
+    let res = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?f=${q}`)
+     
+    let data = await res.json();
+    // console.log(data.meals);
+    return data.meals;
+    // appendrecepie(data.meals)
+
+   }
+
+
+    function appendrecepie(receipe){
+
+        document.getElementById("foodshow").innerHTML=null;
+        receipe.forEach(function(el){
+
+     
+           
+            let mealdiv = document.createElement("div");
+           
+            let image=document.createElement("img");
+
+          image.src=  el.strMealThumb;
+            let p1=document.createElement("h3");
+            p1.textContent=el.strCategory;
+
+            let p2=document.createElement("p");
+            p2.textContent=el.strMeal;
+            
+            let p3=document.createElement("p");
+            p3.textContent=el.strTags;
+            
+            mealdiv.append(image,p1,p2 ,p3);
+            mealdiv.onclick=function(receipe){
+                receipedetails(el);
+            }
+     
+   document.getElementById("foodshow").append(mealdiv);
+
+        })
+
+    }
+
+
+  async function main(){
+
+     let q= document.getElementById("enterfood").value;
+  let res = await searchrecepie(q)
+
+   // console.log(res);
+   appendrecepie(res);
+
+
+  }
+
+
+
+
+
+   function debounce( func ,delay){
+
+  if(timerId){
+      clearTimeout(timerId)
+  }
+
+   timerId=setTimeout(function(){
+       func();
+       document.getElementById("foodshow").style.visibility="visible";
+   },delay)
+
+
+
+
+   }
+
+  function receipedetails(el){
+      console.log(el)
+       document.getElementById("receipedetails").innerHTML=null;
+     
+       var name=document.createElement("h2");
+       name.textContent=el.strMeal;
+       let image=document.createElement("img");
+       image.src=el.strMealThumb;
+       let ingredients=document.createElement("p");
+       ingredients.textContent= "Ingredients:-"+el.strIngredient1+el.strIngredient2+el.strIngredient3+el.strIngredient4+el.strIngredient5
+
+    let measure=document.createElement("p");
+      measure.textContent= "Measurement:"+el.strMeasure1+el.strMeasure2+el.strMeasure3+el.strMeasure4;
+
+      let instructions=document.createElement("p");
+      instructions.textContent= "Instructions:-"+el.strInstructions;
+      
+      let vid=document.createElement("video");
+        vid.url=el.strYoutube;
+
+        document.getElementById("receipedetails").append(image,name,ingredients,measure,instructions,vid)
+   document.getElementById("receipedetails").style.visibility="visible";
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///     food category shown below
+     
+       async function foodcategory(){  
+    
+        let res = await fetch(`https://www.themealdb.com/api/json/v1/1/categories.php`)
+     let data= await res.json();
+  //console.log(data.categories);
+    
+    appendcategory(data.categories)
+      }
+
+
+      foodcategory();
+
+
+    function appendcategory(arr){
+
+   arr.forEach(element => {
+       
+    let food_div=document.createElement("div");
+     let p1=document.createElement("h3");
+     p1.textContent=element.strCategory;
+     let image=document.createElement("img");
+     image.src=element.strCategoryThumb;
+    
+
+      food_div.append(image,p1)
+
+    document.getElementById("foodcontainer").append(food_div)
+
+   });
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>

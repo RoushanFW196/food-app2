@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipe of the day</title>
+    <link rel="stylesheet" href="./styles/style.css">
+</head>
+<body>
+    <div id="navbar"></div>
+  
+
+    <div id="randomreceipe"></div>
+
+
+
+
+    <script type="module">
+
+import navbar from "./components/navbar.js";
+  document.getElementById("navbar").innerHTML=navbar();
+
+  // console.log(navbar())
+
+    </script>
+
+<script>
+
+  async function dayreceipe(){
+
+    let res= await fetch(`https://www.themealdb.com/api/json/v1/1/random.php`)
+  let data = await res.json();
+    console.log(data.meals)
+
+    appendrandomreceipe(data.meals)
+  }
+
+ dayreceipe();
+    
+   function appendrandomreceipe(arr){
+
+    arr.forEach(element => {
+        let receipe=document.createElement("div");
+
+let p1=document.createElement("h2");
+p1.textContent=element.strMeal+"("+element.strTags+")";
+  
+   let image=document.createElement("img");
+    image.src=element.strMealThumb;
+     
+    let p2=document.createElement("h5");
+    p2.textContent= "Ingredients:-"+element.strIngredient1+"("+element.strMeasure1+")"+" ,"+element.strIngredient2+"("+element.strMeasure2+")"+" ,"+element.strIngredient3+"("+element.strMeasure3+")"+" ,"+element.strIngredient4+"("+element.strMeasure4+")"+" ,"+element.strIngredient5+"("+element.strMeasure5+")"+" ,"+element.strIngredient6+"("+element.strMeasure7+")"+" ,"+element.strIngredient8+"("+element.strMeasure8+")";
+
+  
+     
+    let p4=document.createElement("p");
+    p4.textContent="Instructions"+element.strInstructions;
+
+   
+
+    let p6= document.createElement("p");
+    p6.textContent=element.strArea;
+
+    let vid=document.createElement("iframe");
+    var ar=element.strYoutube.split("=");
+     console.log(ar[1])
+    vid.src=`https://www.youtube.com/embed/${ar[1]}`
+  //  element.strYoutube;
+       
+    
+     receipe.append(image,p1,p6,p2,p4,vid)
+
+  document.getElementById("randomreceipe").append(receipe)
+
+
+});
+  
+
+
+
+   }
+
+
+
+
+
+</script>
+
+
+
+
+
+
+</body>
+</html>
